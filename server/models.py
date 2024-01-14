@@ -43,6 +43,13 @@ class Post(db.Model):
         if not title:
             raise ValueError('You must include a title')
         return title 
+    @validates('title')
+    def validate_title_baits (self, key, title):
+        clickbait_phrases = ["Won't Believe", "Secret", "Top", "Guess"]
+        if not any(phrase in title for phrase in clickbait_phrases):
+            raise ValueError('Title must be sufficiently clickbait-y. It should contain one of: "Won\'t Believe", "Secret", "Top [number]", "Guess".')
+        return title
+    
     @validates('content')
     def validate_content(self, key, content):
         if len(content) < 250:
